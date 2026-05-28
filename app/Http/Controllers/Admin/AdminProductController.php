@@ -12,7 +12,8 @@ class AdminProductController extends Controller
     // Lista todos os produtos no painel do Admin
     public function index()
     {
-        $products = Product::with('category')->get();
+        $products = Product::paginate(10);
+
         return view('admin.products.index', compact('products'));
     }
 
