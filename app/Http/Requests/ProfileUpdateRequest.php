@@ -44,7 +44,14 @@ class ProfileUpdateRequest extends FormRequest
             ],
 
             'phone' => ['required', 'string'],
-            'address' => ['required', 'string'],
+
+            // 🏠 VALIDAÇÃO DO ENDEREÇO SEPARADO
+            'cep'          => ['required', 'string', 'max:9'],
+            'street'       => ['required', 'string', 'max:255'],
+            'number'       => ['required', 'string', 'max:50'],
+            'neighborhood' => ['required', 'string', 'max:255'],
+            'city'         => ['required', 'string', 'max:255'],
+            'state'        => ['required', 'string', 'max:2'],
         ];
     }
 
@@ -60,7 +67,14 @@ class ProfileUpdateRequest extends FormRequest
             'cpf.required'   => 'O campo CPF é obrigatório.',
             'cpf.unique'     => 'Este CPF já está cadastrado no sistema.',
             'phone.required' => 'O campo de telefone é obrigatório.',
-            'address.required' => 'O campo de endereço é obrigatório.',
+
+
+            'cep.required'          => 'O campo CEP é obrigatório.',
+            'street.required'       => 'O campo Rua é obrigatório.',
+            'number.required'       => 'O campo Número é obrigatório.',
+            'neighborhood.required' => 'O campo Bairro é obrigatório.',
+            'city.required'         => 'O campo Cidade é obrigatório.',
+            'state.required'        => 'O campo UF é obrigatório.',
         ];
     }
 }

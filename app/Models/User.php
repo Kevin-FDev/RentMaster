@@ -25,7 +25,13 @@ class User extends Authenticatable
         'role',
         'cpf',
         'phone',
-        'address',
+        'cep',
+        'street',
+        'number',
+        'neighborhood',
+        'city',
+        'state',
+
     ];
 
     /**

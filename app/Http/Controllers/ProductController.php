@@ -7,6 +7,8 @@ use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail; // 👈 Importação do Mailer adicionada
+use App\Mail\RentalConfirmedNotification; // 👈 Importação da nossa classe de email adicionada
 
 class ProductController extends Controller
 {
@@ -30,7 +32,6 @@ class ProductController extends Controller
     }
 
     // 2. INDEX DO ADMINISTRADOR (Painel de Gerenciamento - admin/products/index.blade.php)
-    // CORRIGIDO: Adicionada a função que a tabela do administrador estava procurando!
     public function adminIndex()
     {
         // Paginamos todos os produtos (independente de status) para o admin gerenciar
@@ -50,9 +51,10 @@ class ProductController extends Controller
     {
         $user = \Illuminate\Support\Facades\Auth::user();
 
-        if (empty($user->cpf) || empty($user->phone) || empty($user->address)) {
+        // CORRIGIDO: Checa se os novos campos de endereço separados estão preenchidos
+        if (empty($user->cpf) || empty($user->phone) || empty($user->cep) || empty($user->street) || empty($user->number)) {
             return redirect()->route('profile.edit')
-                ->with('error', 'Atenção! Você precisa completar suas informações de perfil (CPF, Telefone e Endereço) antes de solicitar qualquer equipamento.');
+                ->with('error', 'Atenção! Você precisa completar suas informações de perfil e endereço antes de solicitar qualquer equipamento.');
         }
 
         $request->validate([
@@ -74,7 +76,8 @@ class ProductController extends Controller
 
         $totalPrice = $days * $product->price_per_day;
 
-        Rental::create([
+        // Cria a locação no banco de dados
+        $rental = Rental::create([
             'user_id'     => \Illuminate\Support\Facades\Auth::id(),
             'product_id'  => $product->id,
             'start_date'  => $request->start_date,
@@ -83,6 +86,15 @@ class ProductController extends Controller
             'status'      => 'pendente'
         ]);
 
-        return redirect()->back()->with('success', 'Sua solicitação de reserva foi enviada com sucesso! Aguarde a aprovação do administrador.');
+        // 📧 GATILHO DE ENVIO DE EMAIL AUTOMÁTICO
+        // Envia o e-mail informando o valor, nome do produto e tempo total de aluguel
+        $durationText = $days . ($days === 1 ? ' dia' : ' dias');
+        Mail::to($user->email)->send(new RentalConfirmedNotification(
+            $product->name,
+            $totalPrice,
+            $durationText
+        ));
+
+        return redirect()->back()->with('success', 'Sua solicitação de reserva foi enviada com sucesso! Um e-mail com os detalhes foi enviado para você.');
     }
 }

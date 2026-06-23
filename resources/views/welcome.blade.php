@@ -19,17 +19,27 @@
     <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 transition-colors duration-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="flex-shrink-0">
-                    <a href="/" class="text-2xl font-bold text-blue-600 dark:text-blue-400">RentMaster</a>
+                <div class="flex items-center space-x-8">
+                    <div class="flex-shrink-0">
+                        <a href="/" class="text-2xl font-bold text-blue-600 dark:text-blue-400">RentMaster</a>
+                    </div>
+                    <div class="hidden sm:flex space-x-4">
+                        <a href="/" class="border-b-2 border-blue-500 text-sm text-gray-900 dark:text-white px-1 pt-1 font-semibold">
+                            Equipamentos
+                        </a>
+                    </div>
                 </div>
-                <div class="flex space-x-4">
+
+                <div class="flex space-x-4 items-center">
                     @if (Route::has('login'))
                         @auth
-                            <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium">Meu Painel</a>
+                            <a href="{{ url('/dashboard') }}" class="text-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-xl font-semibold shadow-sm transition-all">
+                                📊 Meu Painel
+                            </a>
                         @else
                             <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium">Entrar</a>
                             @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="ml-4 text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md font-medium shadow-sm transition-colors">Cadastrar</a>
+                                <a href="{{ route('register') }}" class="ml-2 text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md font-medium shadow-sm transition-colors">Cadastrar</a>
                             @endif
                         @endauth
                     @endif
